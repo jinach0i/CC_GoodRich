@@ -1,0 +1,479 @@
+﻿'use strict';
+
+define(['angular'], function (angular) {
+	var MainApp = angular.module('MainApp');
+
+	MainApp.controller('indexController', function ($scope, $location, $document, $timeout, $window, $rootScope) {
+
+		var windowW;
+		var windowH;
+		var supportsWheel = false;
+		var mainPageNum = 1;
+		var totalPageNum = 11;
+
+		var isVideoPopup;	// 비디오 팝업
+		
+		var delta = 300;	// resize
+		var timer = null;
+
+		var visualNum = 0;
+		var visualTimer = null;
+		var visualTimerTime = 5000;
+
+		$rootScope.isCheckIE = false;	// ie 체크
+
+		function DoSomething (e) {
+			/* Check whether the wheel event is supported. */
+			if (e.type == "wheel") supportsWheel = true;
+			else if (supportsWheel) return;
+
+			/* Determine the direction of the scroll (< 0 → up, > 0 → down). */
+			var delta = ((e.deltaY || -e.wheelDelta || e.detail) >> 10) || 1;
+
+			if ($location.path().match("/main")) {
+				totalPageNum = $('.fp-section').length;
+				if( delta < 0 ){
+					if( mainPageNum > 1) {
+						$scope.removeEventPage();
+						mainPageNum --;
+						$scope.naviClick(mainPageNum);
+					}
+				}else{
+					if( mainPageNum < totalPageNum){
+						$scope.removeEventPage();
+						mainPageNum ++;
+						$scope.naviClick(mainPageNum);
+					}
+				}
+
+				// 배경 타이머
+				visualTimer = setTimeout( visualMotion, visualTimerTime );
+			}else{
+				// 배경 타이머 지우기
+				clearTimeout( visualTimer );
+			}
+			
+			if(mainPageNum == totalPageNum){
+				$('#privacy.fp-section').addClass('active'); // 맨 하단시(footer) 개인정보보호 active
+			}else{
+				$('.fp-section.active').removeClass('active');
+				$('.fp-section').eq(mainPageNum-1).addClass('active');
+			}
+		}
+
+		var touchStartY, touchEndY;
+		function DoSomethingStartTouch(e) {
+			touchStartY = e.changedTouches[0].screenY;
+		}
+		function DoSomethingEndTouch(e){
+			touchEndY = e.changedTouches[0].screenY;
+			if ($location.path().match("/main")) {
+				if(touchStartY - touchEndY > 30){
+					if( mainPageNum < totalPageNum){
+						$scope.removeEventPage();
+						mainPageNum ++;
+						$scope.naviClick(mainPageNum);
+					}
+				}else if(touchEndY - touchStartY > 30){
+					if( mainPageNum > 1) {
+						$scope.removeEventPage();
+						mainPageNum --;
+						$scope.naviClick(mainPageNum);
+					}
+				}
+
+				// 배경 타이머
+				visualTimer = setTimeout( visualMotion, visualTimerTime );	
+			}else{
+				// 배경 타이머 지우기
+				clearTimeout( visualTimer );
+			}
+
+			$('.fp-section.active').removeClass('active');
+			$('.fp-section').eq(mainPageNum-1).addClass('active');
+		}
+
+		// header 앱다운로드 menu click
+		$scope.naviDownClick= function(){
+			$scope.removeEventPage();
+			if($location.path().match("/main")){
+				mainPageNum = 1;
+				$scope.naviClick(mainPageNum);
+			} else{
+				$location.url('/main');
+			}
+		}
+		// header 굿리치서비스 menu click
+		$scope.naviServiceClick= function(){
+			$scope.removeEventPage();
+			if($location.path().match("/main")){
+				mainPageNum = 2;
+				$scope.naviClick(mainPageNum);
+			} else{
+				$location.url('/main#drawer');
+			}
+		}
+
+		function setVisualScroll() {
+			windowW = $(window).width();
+			windowH = $(window).height();
+
+			$('#fullpage .fp-tableCell').css({height: windowH});
+			if($rootScope.isCheckIE && !$('.ex_fix_wrap').hasClass('hide')){
+				$("body").css({ "margin-top": "91px"});
+			}else{
+				$("body").css({ "margin-top": "0px"});
+			}
+
+			var viewTop = $('.section').eq(mainPageNum-1).offset(); // 비주얼 위치
+			if(viewTop){
+				$("html, body").stop().animate({ scrollTop: viewTop.top}, 500, function(){
+					document.addEventListener('wheel', DoSomething);
+					document.addEventListener('mousewheel', DoSomething);
+					document.addEventListener('DOMMouseScroll', DoSomething);
+					document.addEventListener('touchstart', DoSomethingStartTouch);
+					document.addEventListener('touchend', DoSomethingEndTouch);
+				});
+			}
+
+			// 페이지 네비게이션 리셋
+			$('#fp-nav .active').removeClass("active");
+			$('#fp-nav button').eq(mainPageNum-1).addClass("active");
+			if(mainPageNum == totalPageNum){
+				$('#fp-nav button').eq(totalPageNum-2).addClass("active");
+			}
+
+			// GNB
+			$('.gnb .on').removeClass('on');
+			if( mainPageNum == 1 ){
+				$('.gnb .gnb_down').addClass('on');
+			} else {
+				$('.gnb .gnb_service').addClass('on');
+			}
+
+			// header
+			if(mainPageNum == 2){
+//				$('.header').addClass('white');
+//				$('#fp-nav').addClass('white');
+//				$('.btn_top').addClass('white');
+			}else{
+				$('.header').removeClass('white');
+				$('#fp-nav').removeClass('white');
+				$('.btn_top').removeClass('white');
+			}
+
+			// 우측 앱다운로드
+			if(mainPageNum == 1){
+				$('.btn_appdownload').addClass('off');
+			}else{
+				$('.btn_appdownload').removeClass('off');
+			}
+
+			// youtube bg rolling
+			if(mainPageNum == 1){
+				// 배경 타이머
+				visualTimer = setTimeout( visualMotion, visualTimerTime );
+			}else{
+				// 배경 타이머 지우기
+				clearTimeout( visualTimer );
+			}
+		}
+
+		$scope.removeEventPage = function(){
+			document.removeEventListener('wheel', DoSomething);
+			document.removeEventListener('mousewheel', DoSomething);
+			document.removeEventListener('DOMMouseScroll', DoSomething);
+			document.addEventListener('touchstart', DoSomethingStartTouch);
+			document.addEventListener('touchend', DoSomethingEndTouch);
+		}
+
+		$scope.naviClick = function( naviNum ){
+			$scope.removeEventPage();
+			mainPageNum = naviNum;
+			if( mainPageNum == 1 ){
+				$('.btn_top').addClass('down');
+				$('.btn_top').text('아래로');
+			}else{
+				if($('.btn_top').hasClass('down')){
+					$('.btn_top').removeClass('down');
+					$('.btn_top').text('위로');
+				}
+			}
+
+			$('.fp-section.active').removeClass('active');
+			$('.fp-section').eq(mainPageNum-1).addClass('active');
+			setVisualScroll();
+		}
+
+		// 유튜브 배경
+		function visualMotion(){
+			visualNum++;
+			if( visualNum > $('.play_list li').length-1 ) visualNum = 0;
+			$scope.mainThumbHover( visualNum );
+
+			// 배경 타이머 지우기
+			clearTimeout( visualTimer );
+			// 배경 타이머
+			visualTimer = setTimeout( visualMotion, visualTimerTime );
+		}
+		// 메인 비쥬얼 섬네일
+		$scope.mainThumbHover = function(num){
+			// 배경 타이머 지우기
+			clearTimeout( visualTimer );
+
+			$('#youtube .bg.on').removeClass('on');
+			visualNum = num;
+			$('#youtube .bg').eq(num).addClass('on');
+			$('.play_list li').removeClass('on');
+			$('.play_list li').eq(num).addClass('on');
+
+			// 배경 타이머
+			visualTimer = setTimeout( visualMotion, visualTimerTime );
+		}
+
+		// 유튜브 팝업 보기
+		$scope.showVideoPop = function( playId ){
+			// 배경 타이머 지우기
+			clearTimeout( visualTimer );
+			isVideoPopup = true;
+			$scope.removeEventPage();
+			$('.video_popup_wrap').addClass('open');
+			$('.video_popup_wrap .popup iframe').attr('src', 'https://www.youtube.com/embed/'+playId+'?autoplay=1&mute=1&enablejsapi=1&listType=user_uploads&rel=0');
+			$('.video_popup_wrap').animate({top:0}, 1000);
+		};
+		// 유튜브 팝업 닫기
+		$scope.hideVideoPop = function(){
+			isVideoPopup = false;
+			$('.video_popup_wrap').animate({top:windowH}, function(){
+				$('.video_popup_wrap').removeClass('open');
+			});
+			if( mainPageNum == 1 ){
+				// 배경 타이머
+				visualTimer = setTimeout( visualMotion, visualTimerTime );
+			}else{
+				// 배경 타이머 지우기
+				clearTimeout( visualTimer );
+			}
+			setVisualScroll();
+			$('#popupYoutube iframe')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}','*');
+		}
+
+		$(window).on('resize', function() {
+			if ($location.path().match("/main")) {
+				clearTimeout( timer );
+				timer = setTimeout( resizeDone, delta );
+			}
+		});
+		function resizeDone() {
+			setVisualScroll();
+		}
+
+		$scope.$on('$viewContentLoaded', function () {
+			// ie 9 이하
+			var ieVersion = getVersionCheck();
+			if(ieVersion < 10){
+				$rootScope.isCheckIE = true;
+				$('.ex_fix_wrap').removeClass('hide');
+			}else{
+				$('.ex_fix_wrap').addClass('hide');
+			}
+			// ie 업그레이드 배너 닫기 버튼
+			$('.ex_fix_wrap .close').on('click', function(e){
+				e.preventDefault();
+				$rootScope.isCheckIE = false;
+				$('.ex_fix_wrap').addClass('hide');
+				setVisualScroll();
+			});
+
+			if ($location.path().match("/main")) {
+				angular.element(document.querySelector('body')).addClass('main');
+				if($('.header').hasClass('on')){
+					$('.header').removeClass('on');
+				}
+				olchiMoveImg();
+				mainQRcode();
+			} else {
+				angular.element(document.querySelector('body')).removeClass('main');
+			}
+
+			var url = $location.url();
+			if(url.indexOf("?") >= 0) {
+				url = url.substring(0, url.indexOf("?"));
+			}else if(url.indexOf("%") >= 0) {
+				url = url.substring(0, url.indexOf("%"));
+			}
+
+			if (url == "/main"){		// 앱 다운로드
+				mainPageNum = 1;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#down"){		// 앱 다운로드
+				mainPageNum = 1;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#service"){	// 굿리치 TVCF
+				mainPageNum = 1;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#drawer"){	// 보험 서랍
+				mainPageNum = 2;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#family"){	// 가족보험
+				mainPageNum = 3;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#story"){	// 질문 답변
+				mainPageNum = 4;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#charge"){	// 보험 청구
+				mainPageNum = 5;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#analysis"){	// 보험 분석
+				mainPageNum = 6;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#market"){	// 맞춤 상품
+				mainPageNum = 7;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#lounge"){	// 굿리치라운지
+				mainPageNum = 8;
+				$scope.naviClick(mainPageNum);
+			}else if (url == "/main#privacy"){	// 개인정보보호
+				mainPageNum = 9;
+				$scope.naviClick(mainPageNum);
+			}else if ($location.path() == '/certificate') { // 공인인증서 복사
+				$('.header.white').removeClass('white');
+				$('.header.on').removeClass('on');
+				$('.btn_top').hide();
+				$('.gnb .gnb_certificate').addClass('on').siblings().removeClass('on');
+			}else if ($location.path().match('/tip')) { // 보험TIP
+				$('.header.white').removeClass('white');
+				$('.header').addClass('on');
+				$('.btn_top').hide();
+				$('.gnb .gnb_tip').addClass('on').siblings().removeClass('on');
+			}
+
+			loadingBar(false);
+			$timeout(function() {
+				$scope.mainLoadComplete = true;
+			}, 100);
+
+			$document.on('scroll', function() {
+				var windowTop = $(window).scrollTop();
+				if($location.path() == '/certificate'){
+					if(windowTop > 10){
+						$('.header').addClass('on');
+						$('.btn_top').show();
+					}else{
+						$('.header').removeClass('on');
+						$('.btn_top').hide();
+					}
+				}
+			});
+		});
+
+		// 스크롤 탑
+		$scope.goScrollTop = function(){
+			if ($location.path() == "/main"){
+				if( $(window).scrollTop() == 0 ){
+					$scope.naviClick(2);
+				}else{
+					$scope.naviClick(1);
+				}
+			}else{
+				$("html, body").stop().animate({scrollTop: 0});
+			}
+		}
+		
+		// URL 이동
+	    $scope.goUrl = function(url, target) {
+	    	if (target == 'blank') $window.open(url, '_blank');
+	    	else $window.location.href = url;
+	    }
+		
+		// 보험TIP 상세 페이지 이동
+		$scope.tipDetailMove = function(tipSeq){
+			$location.path("/tip/detail/"+tipSeq);
+		}
+	});
+
+	// 휴대폰 포맷
+	var phoneFormat = function (value, value2) {
+		if (value2) {
+			value = value + value2;
+		}
+		var numbers = value && value.replace(/-/g,"");
+		var matches = numbers && numbers.match(/^(\d{3})(\d{4})$/);
+		if (matches) {
+			return matches[1] + "-" + matches[2];
+		}
+		matches = numbers && numbers.match(/^(\d{4})(\d{4})$/);
+		if (matches) {
+			return matches[1] + "-" + matches[2];
+		}
+		matches = numbers && numbers.match(/^(\d{3})(\d{3})(\d{4})$/);
+		if (matches) {
+			return matches[1] + "-" + matches[2] + "-" + matches[3];
+		}
+		matches = numbers && numbers.match(/^(\d{3})(\d{4})(\d{4})$/);
+		if (matches) {
+			return matches[1] + "-" + matches[2] + "-" + matches[3];
+		}
+		return numbers;
+	}
+	
+	// 폰번호 입력 체크
+	MainApp.directive('phoneFormat', function() {
+		return {
+			restrict: 'A',
+			require: 'ngModel',
+			link: function (scope, element, attrs, ctrl) {
+				ctrl.$formatters.push(phoneFormat);
+				element.bind("keyup", function () {
+					var value = phoneFormat(element.val());
+					if (!!value) {
+						ctrl.$setViewValue(value);
+						ctrl.$render();
+					}
+					scope.$apply();
+				});
+			}
+		}
+	});
+	
+	// 숫자만 입력
+	MainApp.directive('onlyNumber', function() {
+		return { 
+			require: '?ngModel',
+			link: function (scope, element, attrs, ngModelCtrl) {
+				if(!ngModelCtrl) {
+					return;
+				}
+				element.on('compositionstart', function(e) {
+					e.stopImmediatePropagation();
+				});
+				ngModelCtrl.$parsers.push(function(val) {
+					if (angular.isUndefined(val)) {
+						var val = '';
+					}
+					var clean = val.replace(/[^-0-9]/g, '');
+					if (val !== clean) {
+					ngModelCtrl.$setViewValue(clean);
+					ngModelCtrl.$render();
+					}
+					return clean;
+				});
+				element.bind('keypress', function(event) {
+					if(event.keyCode === 32) {
+						event.preventDefault();
+					}
+				}) 
+			}
+		}
+	});
+	
+	// html 컨텐츠 표시 (ng-bind-html과 같이 써야함)
+	MainApp.filter("html", ['$sce', function($sce) {
+		return function(htmlCode){
+			return $sce.trustAsHtml(htmlCode);
+		}
+	}]);
+	
+
+
+});

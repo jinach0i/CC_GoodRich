@@ -1,0 +1,147 @@
+﻿﻿'use strict';
+
+define(['require'], function (require) {
+	var MainApp = angular.module('MainApp', ['ngRoute', 'ngResource', 'ngSanitize', 'ngCookies', 'ui.bootstrap', 'oc.lazyLoad', 'ng.shims.placeholder', 'cgBusy', 'LocalStorageModule', 'CommonFactoryApp']);
+
+	MainApp.config(function ($routeProvider, $httpProvider, $locationProvider, $controllerProvider, $provide) {
+		var cssFullPage = "css!/resources/css/micro/pc/jquery.fullPage.css";
+		var cssPun = "css!/resources/css/micro/common/punStyle.css";
+		var cssTip = "css!/resources/css/micro/common/tip.css";
+		var kakao = "https://developers.kakao.com/sdk/js/kakao.min.js";
+		
+		// To register controller and services which will be loaded lazily
+		$locationProvider.html5Mode({
+			enabled: true,
+			requireBase: false
+		});
+		
+		$httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
+		$httpProvider.defaults.headers.common['Pragma'] = "no-cache";
+		
+		MainApp.registerController = $controllerProvider.register;
+		MainApp.$register = $provide;
+		
+		var version = "?bust=" + (new Date()).getTime();
+		
+		$routeProvider
+			.when('/main', {
+				templateUrl: '/partials/micro/pc/main.html' + version,
+				controller: 'mainController',
+				caseInsensitiveMatch: true,
+				resolve: {
+					loadModule: ['$ocLazyLoad', '$q', function ($ocLazyLoad, $q) {
+						var deferred = $q.defer();
+						require(["mainController", cssFullPage], function () {
+							$ocLazyLoad.inject('MainApp');
+							deferred.resolve();
+						});
+						return deferred.promise;
+					}]
+				}
+			})
+			.when('/certificate', {
+				title: 'certificate',
+				templateUrl: '/partials/micro/pc/certificate.html' + version,
+				controller: 'mainController',
+				caseInsensitiveMatch: true,
+				resolve: {
+					loadModule: ['$ocLazyLoad', '$q', function ($ocLazyLoad, $q) {
+						var deferred = $q.defer();
+						require(["mainController","touchen_loader"], function () {
+							$ocLazyLoad.inject('MainApp');
+							deferred.resolve();
+						});
+						return deferred.promise;
+					}]
+				}
+			})
+			.when('/tip/list/:page', { //보험TIP : list
+				templateUrl: '/partials/micro/common/tip_list.html' + version,
+				controller: 'tipController',
+				caseInsensitiveMatch: true,
+				resolve: {
+					loadModule: ['$ocLazyLoad', '$q', function ($ocLazyLoad, $q) {
+						var deferred = $q.defer();
+						require(["tipController", cssTip], function () {
+							$ocLazyLoad.inject('MainApp.tip');
+							deferred.resolve();
+						});
+						return deferred.promise;
+					}]
+				}
+			})
+			.when('/tip/list/:page/:tag', { //보험TIP : search tag
+				templateUrl: '/partials/micro/common/tip_list.html' + version,
+				controller: 'tipController',
+				caseInsensitiveMatch: true,
+				resolve: {
+					loadModule: ['$ocLazyLoad', '$q', function ($ocLazyLoad, $q) {
+						var deferred = $q.defer();
+						require(["tipController", cssTip], function () {
+							$ocLazyLoad.inject('MainApp.tip');
+							deferred.resolve();
+						});
+						return deferred.promise;
+					}]
+				}
+			})
+			.when('/tip/detail/:noticeSeq', { //보험TIP : detail
+				templateUrl:'/partials/micro/common/tip_detail.html' + version,
+				controller: 'tipDetailController',
+				caseInsensitiveMatch: true,
+				resolve: {
+					loadModule: ['$ocLazyLoad', '$q', function ($ocLazyLoad, $q) {
+						var deferred = $q.defer();
+						require(["tipDetailController", cssPun, cssTip, kakao], function () {
+							$ocLazyLoad.inject('MainApp.tipDetail');
+							deferred.resolve();
+						});
+						return deferred.promise;
+					}] 
+				} 			
+			})
+			
+			.otherwise({
+				title: 'main',
+				redirectTo: '/main'
+			});
+
+		$httpProvider.interceptors.push(function ($q, $location) {
+			return {
+				request: function (config) {
+					return config;
+				},
+				response: function (result) {
+					return result;
+				},
+				responseError: function (rejection) {
+					console.log('Failed with', rejection.status, 'status');
+
+					return $q.reject(rejection);
+				}
+			}
+		});
+	});
+
+	MainApp.run(function ($rootScope, $uibModal, $log, $document) {
+		$rootScope.promise = null;
+		$rootScope.templateUrl = "/resources/html/custom-template.html";
+		$rootScope.message = '잠시만 기다려 주세요.';
+		$rootScope.backdrop = false;
+		$rootScope.delay = 200;
+		$rootScope.minDuration = 700;
+		
+		$rootScope.openComponentModal = function (modalComponent, resolveItem, callback, animationsEnabled, backdropEnabled) {
+			var modalInstance = $uibModal.open({
+				animation: animationsEnabled ? animationsEnabled : true,
+				backdrop: backdropEnabled ? backdropEnabled : 'static',
+				component: modalComponent,
+				resolve: resolveItem
+			});
+
+			modalInstance.result.then(callback, function () {
+				$log.info('modal-component dismissed at: ' + new Date());
+			});
+		};
+	});
+})

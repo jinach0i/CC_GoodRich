@@ -1,0 +1,58 @@
+﻿﻿'use strict';
+
+define(['angular'], function (angular) {
+	var MainApp = angular.module('MainApp');
+
+	MainApp.controller('mainController', function ($scope, $rootScope, $location, $http, $interval, $window, $timeout, $document, commonFactory ) {
+		var commFactory = new commonFactory();
+
+		$scope.contentList = [];
+		$scope.contentMainList = [];
+		$scope.contentDataList = [];
+		commFactory.getMicroBannerList('MIPC_MAIN', function(apiResult){
+			if (apiResult.bannerList && apiResult.bannerList.length > 0){
+				$scope.contentList = apiResult.bannerList;
+
+				$scope.contentList.forEach(function(content) {
+					if(content.bannerClass == "MAIN"){
+						$scope.contentMainList.push(content);
+					}else{
+						$scope.contentDataList.push(content);
+					}
+				});
+			}
+		});
+
+		if ($location.path() == "/certificate") {
+			KS_loading();	// 공인인증서 복사 모듈 초기화 (IE)
+		}
+		
+		// 동의하고 문자전송 버튼 클릭
+		$scope.sendSmsDownload = function (){
+			if(!$scope.phone2){
+				alert('휴대폰 번호를 입력해주세요.');
+			}else{
+				var phone = $scope.phone2.replace(/-/gi, '');
+				
+				if( phone.length < 10 ){
+					alert('휴대폰 번호는 10~11자 입력해주세요.');
+		        	return;
+				}else if(!isMobileNum(phone)) {
+					alert('휴대폰 번호를 다시 확인해주세요.');
+		        	return;
+				}
+				
+				$rootScope.promise = commFactory.appStoreSms(phone, function(apiResult){
+					if(apiResult.result == 'SUCCESS') alert('문자발송이 완료되었습니다.');
+				});
+			}
+		}
+
+		$scope.$on('$destroy', function() {
+			if ($location.path() == '/main'){
+				$('html, body').stop();
+			}
+		});
+
+	});
+});

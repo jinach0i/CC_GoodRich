@@ -1,0 +1,100 @@
+﻿﻿'use strict';
+
+define(['angular'], function (angular) {
+	var MainApp = angular.module('MainApp.tipDetail',[]);
+
+	MainApp.controller('tipDetailController', function ($scope, $location, $window, $routeParams, commonFactory) {
+		var commFactory = new commonFactory();
+		
+		// (API) 보험TIP > 굿리치 보험 TIP: 게시글 상세 조회
+		$scope.noticeDetail = {};
+		$scope.tagList = [];
+
+		var noticeSeq = $routeParams.noticeSeq;
+		commFactory.getTipDetail(noticeSeq, function(apiResult) {
+			if(apiResult.result == 'SUCCESS'){
+				if (apiResult.noticeDetail.dispYn !== 'Y'){ // 노출 여부 Y가 아니면 리스트로 이동
+					$window.alert('비공개 된 게시물 입니다.');
+					$location.url('/tip/list/1');
+				}
+				if (apiResult.noticeDetail) $scope.noticeDetail = apiResult.noticeDetail;
+				if (apiResult.noticeList) $scope.noticeList = apiResult.noticeList;
+				$scope.tagList = apiResult.noticeDetail.tag.replace(/\s/gi, '').split(',');
+				$scope.shareUrl = $location.absUrl();
+			}else{
+				$window.alert('잘못된 경로입니다.');
+				$location.url('/tip/list/1');
+			}
+		});
+
+		// click : tag
+		$scope.moveTagSearch = function(tag){
+			$location.path('/tip/list/1/'+tag);
+			$window.scrollTo(0, 0);
+		}
+		
+		// 상세 페이지 이동
+		$scope.tipDetailMove = function(tipSeq){
+			$location.path("/tip/detail/"+tipSeq);
+		}
+
+		if(isNotMobile){
+			// 인스턴스 중복 호출 방지
+			if (Kakao.isInitialized() == false) {
+				Kakao.init("146b25192172caaa4eaa5094e711d63d"); // TODO 회사계정필요!
+
+				// Clipboard
+				var ClipboardJS = require('clipboard');
+				var clipboard = new ClipboardJS('.share_url a');
+				
+				clipboard.on('success', function(e) {
+					alert("복사되었습니다.");
+					commFactory.postTipShare({noticeSeq: noticeSeq, shareType: 'ETC'}, function(apiResult) { // 공유하기 수 업데이트 : ETC
+						if(apiResult.result == 'SUCCESS'){
+							console.log('ETC SUCCESS');
+						}
+					});
+				});
+			}
+
+			$scope.kakaoSharePc = function() {
+				Kakao.Link.sendDefault({
+					objectType: 'feed',
+					content: {
+						title: $scope.noticeDetail.title,
+						description: '\'굿리치 보험 TIP\'에서 확인하세요',
+						imageUrl: $scope.noticeDetail.thumbnailImg,
+						imageWidth: 800,
+						link: {
+							androidExecParams : $scope.shareUrl,
+							iosExecParams : $scope.shareUrl, 
+							mobileWebUrl: $scope.shareUrl,
+							webUrl: $scope.shareUrl
+						}
+					}
+				});
+				
+				commFactory.postTipShare({noticeSeq: noticeSeq, shareType: 'KAKAO'}, function(apiResult) { // 공유하기 수 업데이트 : KAKAO
+					if(apiResult.result == 'SUCCESS'){
+						console.log('KAKAO SUCCESS');
+					}
+				});
+			}
+		}else{
+			$(".btn_share_tip").on("click", function (e){
+				e.preventDefault();
+				$('.header').removeClass('open');
+				$('#popupShareTip').addClass('open'); // 게시글 공유
+			});
+			$("#popupShareTip .bg").on("click", function (){
+				$('#popupShareTip').removeClass('open');
+			});
+			$("#popupShareTip .btn_popup_close").on("click", function (){
+				$('#popupShareTip').removeClass('open');
+			});
+		}
+
+	});
+
+	return MainApp;
+});

@@ -1,0 +1,150 @@
+/**
+ * 공통 API Call
+ */
+define(['angular'], function (angular) {
+	var CommonFactoryApp = angular.module('CommonFactoryApp', []);
+	
+	CommonFactoryApp.factory('commonFactory', function ($cookies, $http) {
+	    var header = {
+	        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+	    }
+	
+	    var commonFactory = function () { };
+	
+	    commonFactory.prototype.checkToken = function () {
+	    	var chkCookie = $cookies.get('goodrichmicro');
+	        if (chkCookie) $http.defaults.headers.common['X-Auth-Token'] = chkCookie;
+	    }
+	    
+	    // 마이크로 PC or 모바일  배너리스트 조회
+	    commonFactory.prototype.getMicroBannerList = function(bannerType, callback) {
+	    	this.checkToken();
+	    	
+	    	$http({
+				method: 'GET',
+				url: '/webapi/banner/list/' + bannerType,
+				headers: header
+				
+			}).then(function onSuccess(res) {
+				if (res.data.responseCode == 200 && res.data.data.result == 'SUCCESS') {
+					callback(res.data.data);
+				} else {
+					callback({});
+				}
+				
+			}, function onError(res) {
+				callback({});
+			});
+		}
+		
+	    // 보험TIP > 리스트 조회
+	    commonFactory.prototype.getTipList = function(apiParam, callback) {
+	    	this.checkToken();
+	    	
+	    	$http({
+				method: 'POST',
+				url: '/webapi/micro/notice/list',
+				data: $.param(apiParam),
+				headers: header
+				
+			}).then(function onSuccess(res) {
+				if (res.data.responseCode == 200 && res.data.data.result == 'SUCCESS') {
+					callback(res.data.data);
+				} else {
+					callback({});
+				}
+				
+			}, function onError(res) {
+				callback({});
+			});
+		}
+	    
+	    // 보험TIP > 상세
+	    commonFactory.prototype.getTipDetail = function(seq, callback) {
+	    	this.checkToken();
+	    	
+	    	$http({
+				method: 'POST',
+				url: '/webapi/micro/notice/view/' + seq,
+				headers: header
+				
+			}).then(function onSuccess(res) {
+				if (res.data.responseCode == 200 && res.data.data.result == 'SUCCESS') {
+					callback(res.data.data);
+				} else {
+					callback({});
+				}
+				
+			}, function onError(res) {
+				callback({});
+			});
+		}
+	    
+		// 보험TIP > tag search
+	    commonFactory.prototype.getTipSearch = function(tag, apiParam, callback) {
+	    	this.checkToken();
+	    	
+	    	$http({
+				method: 'POST',
+				url: '/webapi/micro/notice/search/' + tag,
+				data: $.param(apiParam),
+				headers: header
+				
+			}).then(function onSuccess(res) {
+				if (res.data.responseCode == 200 && res.data.data.result == 'SUCCESS') {
+					callback(res.data.data);
+				} else {
+					callback({});
+				}
+				
+			}, function onError(res) {
+				callback({});
+			});
+		}
+		
+	    // SMS
+	    commonFactory.prototype.appStoreSms = function(phone, callback) {
+	    	this.checkToken();
+	    	
+	    	$http({
+				method: 'GET',
+				url: '/appStoreSms?mobile=' + phone,
+				headers: header
+				
+			}).then(function onSuccess(res) {
+				if (res.status == 200) {
+					callback(res.data);
+				} else {
+					callback({});
+				}
+				
+			}, function onError(res) {
+				callback({});
+			});
+		}
+	    
+		// 보험TIP > 게시글 공유하기 수 업데이트
+	    commonFactory.prototype.postTipShare = function(apiParam, callback) {
+	    	this.checkToken();
+	    	
+	    	$http({
+				method: 'POST',
+				url: '/webapi/micro/notice/update/share',
+				data: $.param(apiParam),
+				headers: header
+
+			}).then(function onSuccess(res) {
+				if (res.data.responseCode == 200 && res.data.data.result == 'SUCCESS') {
+					callback(res.data.data);
+				} else {
+					callback({});
+				}
+
+			}, function onError(res) {
+				callback({});
+			});
+		}
+	    
+	    return commonFactory;
+	});
+});

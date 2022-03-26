@@ -1,0 +1,181 @@
+/*
+****************************************************
+	NXCertRelay_Install.js 수정내역 
+****************************************************
+| Version		 작성자		  수정일		 변경사항 
+ ---------		-------		---------	----------	
+| v2.1.0.4		 강남준		2017.05.04	통합스크립트적용
+| v2.1.0.3       강남준		2017.01.31 
+| v2.1.0.2		 강남준		2016.12.21	
+| v2.1.0.1		 강남준		2016.10.06	
+
+****************************************************
+ Copyright ⒞ RaonSecure Co., Ltd. 
+****************************************************
+*/
+
+/**
+ * fileDownload sample script
+ */
+var TOUCHENEX_INSTALL = {
+
+	installWindow : null,
+	
+	download : function( moduleName, type ) {
+		//2016-07-05
+		var downloadInfo = "";//touchenexInfo;
+		try{
+			if(moduleName =="nxkey"){
+				downloadInfo = touchenexInfo;
+			}else if(moduleName =="nxwirelesscert"){
+				downloadInfo = keysharpnxInfo;
+			}else if(moduleName	=="nxweb"){
+				downloadInfo = touchennxwebInfo;
+			}else if(moduleName == "nxfirewall"){
+				downloadInfo = touchennxfwInfo;
+			}
+		}catch(e){}
+		
+		var pluginInfo = {};
+		for(var i = 0; i < TOUCHENEX_CONST.pluginInfo.length; i++){
+			if(TOUCHENEX_CONST.pluginInfo[i].exModuleName == moduleName){
+				pluginInfo = TOUCHENEX_CONST.pluginInfo[i];
+				//exlog("_INSTALL.download", pluginInfo);
+				break;
+			}
+		}
+		var dummyParam = "dummy="+Math.floor(Math.random() * 10000) + 1;
+		
+
+		
+		
+		// Extension
+		if(type == "extension"){
+			
+			if(TOUCHENEX_UTIL.isChrome()){
+				
+				if(!this.installWindow || this.installWindow.closed){
+					//this.installWindow = window.open(pluginInfo.exExtensionInfo.exChromeExtDownURL);
+					this.installWindow = window.open(downloadInfo.exExtensionInfo.exChromeExtDownURL);
+					if(this.installWindow == null) alert("팝업차단을 확인해주세요.");
+				}
+				
+			} else if(TOUCHENEX_UTIL.isFirefox()) {
+				
+				var params = {};
+				dummyParam = "ver=" + downloadInfo.exExtensionInfo.exFirefoxExtVer;
+				
+				params[downloadInfo.exProtocolName + "_firefox"] = {
+					URL: downloadInfo.exExtensionInfo.exFirefoxExtDownURL + "?" + dummyParam,
+					IconURL: downloadInfo.exExtensionInfo.exFirefoxExtIcon
+				};
+				InstallTrigger.install(params);
+				
+			} else if(TOUCHENEX_UTIL.isOpera()) {
+				
+				dummyParam = "ver=" + downloadInfo.exExtensionInfo.exOperaExtVer;
+				location.href = downloadInfo.exExtensionInfo.exOperaExtDownURL + "?" + dummyParam;
+			} else {
+				alert("현재 브라우저는 extension 설치를 지원하지 않습니다.");
+			}
+			return;
+		}
+		
+		// EX
+		if(type == "EX"){
+			var downURL = "";
+			
+			if(TOUCHENEX_UTIL.isWin()){
+				if(TOUCHENEX_UTIL.getBrowserBit() == "64"){
+					downURL = downloadInfo.exProtocolInfo.exWin64ProtocolDownURL;
+				} else {
+					downURL = downloadInfo.exProtocolInfo.exWinProtocolDownURL;
+				}
+			} else if(TOUCHENEX_UTIL.isMac()){
+				downURL = downloadInfo.exProtocolInfo.exMacProtocolDownURL;
+			} else if(TOUCHENEX_UTIL.isLinux()){
+				// TODO
+			}
+						
+			if(!TOUCHENEX_UTIL.isIE()){
+				dummyParam = "ver=" + downloadInfo.exProtocolInfo.exWinProtocolVer;
+				location.href = downURL + "?" + dummyParam;
+			} else {
+				location.href = downURL;
+			}
+			return;
+		}
+				        
+        //[2015.11]로컬웹서버 방식.
+        // Daemon
+		if(type == "daemon"){
+			var downURL = "";
+			var bSupportBrowser = false;
+
+			if (TOUCHENEX_UTIL.isIE() || (TOUCHENEX_UTIL.isSafari() && !TOUCHENEX_UTIL.isChrome()))
+			{				
+				if(TOUCHENEX_UTIL.isIE() && TOUCHENEX_UTIL.getBrowserBit() == "64"){
+					downURL = downloadInfo.moduleInfo.exWin64Client;
+				} else {
+					downURL = downloadInfo.moduleInfo.exWinClient;
+				}
+			}
+			else {
+				var daemonInfo = downloadInfo.exEdgeInfo;
+				var browserType = TOUCHENEX_UTIL.getBrowserInfo().browser;
+				
+				if(daemonInfo && daemonInfo.supportBrowser instanceof Array && daemonInfo.supportBrowser.length > 0)
+				{
+					for(var i = 0; i < daemonInfo.supportBrowser.length; i++)
+					{
+						var reqBrowser = daemonInfo.supportBrowser[i];
+						if(browserType.toUpperCase() == reqBrowser.toUpperCase())
+						{
+							if(TouchEnNxConfig.runtype == "mainextension" && TOUCHENEX_UTIL.isFirefox() && TOUCHENEX_UTIL.getBrowserBit() == "64" && typeof touchenex_nativecall != "undefined")
+							{
+								downURL = downloadInfo.moduleInfo.exWin64Client;
+							}
+							else
+							{
+								downURL = downloadInfo.exEdgeInfo.daemonDownURL;									
+							}
+						
+							bSupportBrowser = true;
+						}
+					}
+				}
+			
+				if(bSupportBrowser == false) 
+				{
+					alert("현재 브라우저는 daemon 설치를 지원하지 않습니다.");
+					return;
+				}
+			}				
+			location.href = downURL;
+			return;
+		}
+		// Client
+		if(type == "client"){
+			var downURL = "";
+			
+			if(TOUCHENEX_UTIL.isWin()){
+				if(TOUCHENEX_UTIL.getBrowserBit() == "64"){
+					downURL = downloadInfo.moduleInfo.exWin64Client;
+				} else {
+					downURL = downloadInfo.moduleInfo.exWinClient;
+				}
+			} else if(TOUCHENEX_UTIL.isMac()){
+				downURL = downloadInfo.moduleInfo.exMacClient;
+			} else if(TOUCHENEX_UTIL.isLinux()){
+				// TODO
+			}
+			if(!TOUCHENEX_UTIL.isIE()){
+				dummyParam = "ver=" + downloadInfo.moduleInfo.exWinVer;
+				location.href = downURL + "?" + dummyParam;
+			} else {
+				location.href = downURL;
+			}
+			return;
+		}
+	}
+};	

@@ -1,0 +1,177 @@
+/**
+ ***************************************************************************
+ * TouchEn Nx, 1.0.0
+ *
+ * For more information on this product, please see
+ * http://www.raonsecure.com
+ *
+ * Copyright (c) Raonsecure Co.,Ltd  All Rights Reserved.
+ *
+ * 본 코드에 대한 모든 권한은 (주)라온시큐어 있으며 동의없이 사용/배포/가공할 수 없습니다.
+ *
+ ***************************************************************************
+ */
+ 
+ /**
+****************************************************
+TouchEnNx_loader.js
+****************************************************
+| Version     작성자        수정일        변경사항 
+ ---------  -------  -----------  ----------    
+| v1.0.0.1    백서린    2017.01.20      최초
+
+****************************************************
+ Copyright ⒞ RaonSecure Co., Ltd. 
+****************************************************
+**/
+
+var useTouchEnnxKey = false;
+try{
+	if(TOUCHENEX_UTIL.isWin() || TOUCHENEX_UTIL.isMac()){
+		if(TOUCHENEX_UTIL.isIE() && parseInt(TOUCHENEX_UTIL.getBrowserVer()) >= parseInt(TouchEnNxConfig.version.moduleMinVer.MSIE)) useTouchEnnxKey = true;
+		else if(TOUCHENEX_UTIL.isChrome() && parseInt(TOUCHENEX_UTIL.getBrowserVer()) >= parseInt(TouchEnNxConfig.version.moduleMinVer.chromeMinVer)) useTouchEnnxKey = true;
+		else if(TOUCHENEX_UTIL.isFirefox() && parseInt(TOUCHENEX_UTIL.getBrowserVer()) >= parseInt(TouchEnNxConfig.version.moduleMinVer.FireFoxMinVer)) useTouchEnnxKey = true;
+		else if(TOUCHENEX_UTIL.isOpera() && parseInt(TOUCHENEX_UTIL.getBrowserVer()) >= parseInt(TouchEnNxConfig.version.moduleMinVer.OperaMinVer)) useTouchEnnxKey = true;
+		else if(TOUCHENEX_UTIL.isSafari() && parseInt(TOUCHENEX_UTIL.getBrowserVer()) >= parseInt(TouchEnNxConfig.version.moduleMinVer.SafariMinVer)) useTouchEnnxKey = true;
+		else if(TOUCHENEX_UTIL.isEdge())	useTouchEnnxKey = true;
+		else useTouchEnnxKey = false;
+	} else{
+		useTouchEnnxKey = false;
+	}
+}catch(e){
+	useTouchEnnxKey = false;
+}
+var loadmodule = [];
+try{
+	if(TouchEnNxConfig.use.nxkey && useTouchEnnxKey){
+		if(typeof touchenexInfo != "object")	alert("include TouchEnNxKey javascript");
+		if(typeof loadmodule[0] != "object")	loadmodule[0] = touchenexInfo;
+		else	loadmodule[loadmodule.length] = touchenexInfo;
+	}
+	if(TouchEnNxConfig.use.nxcr){
+		if(typeof keysharpnxInfo != "object")	alert("include nxcr javascript");
+		if(typeof loadmodule[0] != "object")	loadmodule[0] = keysharpnxInfo;
+		else	loadmodule[loadmodule.length] = keysharpnxInfo;
+	}
+	if(TouchEnNxConfig.use.nxweb){
+		if(typeof touchennxwebInfo != "object")	alert("include nxweb javascript");
+		if(typeof loadmodule[0] != "object")	loadmodule[0] = touchennxwebInfo;
+		else	loadmodule[loadmodule.length] = touchennxwebInfo;
+	}
+	if(TouchEnNxConfig.use.nxfw){
+		if(typeof touchennxfwInfo != "object")	alert("include nxfw javascript");
+		if(typeof loadmodule[0] != "object")	loadmodule[0] = touchennxfwInfo;
+		else	loadmodule[loadmodule.length] = touchennxfwInfo;
+	}
+}catch(e){}
+
+var TouchEnNx = {
+		flag		: false,
+		useModule	: loadmodule,
+		success	:	function(result){
+			TouchEnNx.processingbar(false);
+			if(result.isvm == "true"){
+				//가상화 환경 일 경우
+			}
+			if (result.result == "true" || result.success == "true") {
+				try{
+					if(typeof touchennxfwInfo == "object" && TouchEnNxConfig.use.nxfw){
+						touchennxfwInterface.CustomEX2("Key_Start",touchennxfwparams);
+						//touchennxfwInterface.CustomEX2("Key_Start","tefw://"+location.host + "/TouchEn/nxFw/TEFW_CONF.ini");
+					}
+					if(typeof touchennxwebInfo == "object" && TouchEnNxConfig.use.nxweb){
+						touchennxwebInterface.CustomEX2("Key_Start",touchennxwebparams);
+					}
+					
+				}catch(e){}
+			}
+		},
+		TK_getUrlParameter : function(name) {
+			var value = "";
+			try {
+				var url = document.location.href;
+				var idx = url.indexOf("?");
+				var params = "&"+url.substring(idx+1);
+				idx = params.indexOf("&" + name + "=");
+				if (idx >= 0) value = params.substring(idx+name.length+2);
+				idx = value.indexOf("&");
+				if (idx >= 0) value = value.substring(0, idx);
+				value = decodeURIComponent(value);
+			} catch(err) {}
+			return value;
+		},
+		processingbar	:	function(tmps){
+			if(!TouchEnNxConfig.processingbar.use) return;
+			if(tmps){
+				if(document.body){
+					if(document.getElementById("tk_overtopDiv")!=null) return true;
+					var div = document.createElement("div");
+					div.setAttribute("id", "tk_overtopDiv");
+					document.body.appendChild(div);
+					var processingbar = '<div id="tk_overdiv" style="z-index:999997;position:fixed; width:100%; height:100%; top:0px; left:0px; background-color: #000000; opacity: 0.3; filter: alpha(opacity=30);">';
+					processingbar += '<div style="z-index:9999998;position:fixed;top:50%; height:100%;width:100%;">';
+					processingbar += '<div style="margin: 0 auto; padding: 5px; width:150px; vertical-align:middle; font-weight:bold; text-align: center; border-radius:5px;">';
+					processingbar += '<img src="'+ TouchEnNxConfig.processingbar.path +'" style="vertical-align:middle"/>';
+					processingbar += '</div>';
+					processingbar += '</div>';
+					processingbar += '</div>';
+					document.getElementById("tk_overtopDiv").innerHTML = processingbar;
+				}
+			}else{
+				if(document.getElementById("tk_overtopDiv")!=null)
+					document.body.removeChild(document.getElementById("tk_overtopDiv"));
+			}
+		},
+		init : function(){
+			loadmodule = [];
+			if(TouchEnNxConfig.use.nxkey && useTouchEnnxKey){
+				if(typeof touchenexInfo != "object")	alert("include TouchEnNxKey javascript");
+				if(typeof loadmodule[0] != "object")	loadmodule[0] = touchenexInfo;
+				else	loadmodule[loadmodule.length] = touchenexInfo;
+			}
+			if(TouchEnNxConfig.use.nxcr){
+				if(typeof keysharpnxInfo != "object")	alert("include nxcr javascript");
+				if(typeof loadmodule[0] != "object")	loadmodule[0] = keysharpnxInfo;
+				else	loadmodule[loadmodule.length] = keysharpnxInfo;
+			}
+			if(TouchEnNxConfig.use.nxweb){
+				if(typeof touchennxwebInfo != "object")	alert("include nxweb javascript");
+				if(typeof loadmodule[0] != "object")	loadmodule[0] = touchennxwebInfo;
+				else	loadmodule[loadmodule.length] = touchennxwebInfo;
+			}
+			if(TouchEnNxConfig.use.nxfw){
+				if(typeof touchennxfwInfo != "object")	alert("include nxfw javascript");
+				if(typeof loadmodule[0] != "object")	loadmodule[0] = touchennxfwInfo;
+				else	loadmodule[loadmodule.length] = touchennxfwInfo;
+			}
+			var moduleArrary = TouchEnNx.useModule;
+			if (typeof TouchEnKey_installpage != "string" && moduleArrary.length > 0 && !TouchEnNx.flag){ // 설치페이지가 아닐 경우 모듈 동작
+				TouchEnNx.processingbar(true);
+				TouchEnNx.flag = true;
+				TOUCHENEX_CHECK.check(moduleArrary, function(currStatus){
+					if (currStatus.status) {
+						TOUCHENEX_LOADING(function(ready){
+							if(TouchEnNxConfig.use.nxkey){
+								TK_LoadingCallback(ready);
+							}else{
+								TouchEnNx.success({success : "true"}); // nxkey 미사용일때 
+							}
+						});
+						KS_moveMainPage();
+					} else {
+						/** 솔루션 미설치 일 때 설치 페이지 이동*/
+						//alert("안전한 홈페이지 사용을 위해 솔루션 설치페이지로 이동합니다.");
+						//location.href = TouchEnNxConfig.installPage.tos;
+						KS_installPage();
+					}
+				});
+			}
+		}
+};
+if(typeof jQuery =="function"){
+	jQuery(function(){
+		if(TouchEnNxConfig.onload){
+			TouchEnNx.init();
+		}
+	});
+}

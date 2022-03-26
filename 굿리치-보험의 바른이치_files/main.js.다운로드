@@ -1,0 +1,133 @@
+﻿// contents of main:
+require.config({
+	urlArgs: function(id, url) {
+		if (url.indexOf('/js/') !== -1 || url.indexOf('/css/') !== -1 || url.indexOf('/TouchEn/') !== -1) {
+			return "";
+		} else {
+			var args = "bust=" + (new Date()).getTime();
+			return (url.indexOf('?') === -1 ? '?' : '&') + args;
+		}
+	},
+	map: {
+		'*': {
+			'css': '../../../js/require/css'
+		}
+	},
+	paths: {
+		// Jquery
+		'jquery': '../../../js/jquery/jquery-3.6.0.min',
+		'jquery_cookie': '../../../js/jquery/jquery.cookie',
+		
+		// uiJs
+		'uiJs': '../../../js/micro/pc/ui',
+
+		// apng
+		'apng': '../../../js/apng-canvas.min',
+		
+		// Angular
+		'angular': '../../../js/angular/angular.min',
+		'angular_route': '../../../js/angular/angular-route.min',
+		'angular_animate': '../../../js/angular/angular-animate.min',
+		'angular_aria': '../../../js/angular/angular-aria.min',
+		'angular_cookie': '../../../js/angular/angular-cookies.min',
+		'angular_messages': '../../../js/angular/angular-messages.min',
+		'angular_resource': '../../../js/angular/angular-resource.min',
+		'angular_sanitize': '../../../js/angular/angular-sanitize.min',
+		'angular_touch': '../../../js/angular/angular-touch.min',
+
+		'angular_ocLazyLoad': '../../../js/ocLazyLoad/ocLazyLoad.require.min',
+		
+		// Angular Extend
+		'angular_placeholder': '../../../js/angular-ext/angular-shims-placeholder.min',
+		'angular_busy': '../../../js/angular-ext/angular-busy',
+		'angular_local_storage': '../../../js/angular-ext/angular-local-storage',
+		'angular_translate': '../../../js/angular-ext/angular-translate.min',
+		'angular_translate_cookie': '../../../js/angular-ext/angular-translate-storage-cookie.min',
+		
+		'lodash': '../../../js/angular-ext/lodash.min',
+
+		// Angular UI
+		'angular_ui_router': '../../../js/angular-ui/angular-ui-router.min',
+		'angular_ui_bootstrap': '../../../js/angular-ui/ui-bootstrap-tpls-2.5.0.min',
+		'angular_ui_grid': '../../../js/angular-ui/ui-grid.min',
+		
+		// library
+		'clipboard': '../../../js/clipboard.min',
+		
+		// TouchEn Nx & NXCertRelay
+		'json2': '../../../TouchEn/cmn/json2',
+		'touchen_config': '../../../TouchEn/cmn/TouchEnNx_config',
+		'touchen_exproto': '../../../TouchEn/cmn/TouchEnNx_exproto',
+		'touchen_Install': '../../../TouchEn/cmn/TouchEnNx_Install',
+		'touchen_daemon': '../../../TouchEn/cmn/TouchEnNx_daemon',
+		'nxcert_config': '../../../TouchEn/cmn/NXCertRelay_config',
+		'nxcert_interface': '../../../TouchEn/nxCR/js/NXCertRelay_Interface',
+		'nxcert': '../../../TouchEn/nxCR/js/NXCertRelay',
+		'touchen_loader': '../../../TouchEn/cmn/TouchEnNx_loader',
+
+		// General
+		'commonFactory': '../common/public/factory/common',
+		
+		'indexController': 'controllers/indexController',
+		'mainController': 'controllers/mainController',
+		'tipController': '../common/controllers/tipController',
+		'tipDetailController': '../common/controllers/tipDetailController',
+	},
+
+	// Mention the dependencies
+	shim: {
+		'angular': { exports: 'angular' },
+		'jquery': { exports: "$" },
+		'angular_route': { deps: ['angular'] },
+		'angular_animate': { deps: ['angular'] },
+		'angular_aria': { deps: ['angular'] },
+		'angular_cookie': { deps: ['angular'] },
+		'angular_resource': { deps: ['angular'] },
+		'angular_sanitize': { deps: ['angular'] },
+		'angular_touch': { deps: ['angular'] },
+		'angular_messages': { deps: ['angular'] },
+		'angular_ocLazyLoad': { deps: ['angular'] },
+		'angular_placeholder': { deps: ['angular'] },
+		'angular_busy': { deps: ['angular', 'css!../../../css/angular/angular-busy.min', 'css!../../../css/angular/gh-fork-ribbon'] },
+		'angular_local_storage': { deps: ['angular'] },
+		'restangular': { deps: ['lodash', 'angular'] },
+		'angular_ui_router': { deps: ['angular'] },
+		'angular_ui_bootstrap': { deps: ['angular'] },
+		'angular_ui_grid': { deps: ['angular', 'css!../../../css/angular/ui-grid.min'] },
+		'touchen_config': { deps: ['json2'] },
+		'touchen_exproto': { deps: ['touchen_config'] },
+		'touchen_Install': { deps: ['touchen_exproto'] },
+		'touchen_daemon': { deps: ['touchen_Install'] },
+		'nxcert_config': { deps: ['touchen_daemon'] },
+		'nxcert_interface': { deps: ['nxcert_config'] },
+		'nxcert': { deps: ['nxcert_interface'] },
+		'touchen_loader': { deps: ['jquery','nxcert'] },
+		'app': {
+			deps: [
+				'angular_route', 'jquery', 'jquery_cookie', 'apng'
+				, 'angular_animate', 'angular_aria', 'angular_messages'
+				, 'angular_cookie', 'angular_resource', 'angular_sanitize', 'angular_touch'
+				, 'angular_ocLazyLoad', 'angular_placeholder', 'angular_busy', 'angular_local_storage'
+				, 'angular_ui_bootstrap'
+				, 'commonFactory', 'uiJs'
+			]
+		},
+		'indexController': {
+			deps: ['app']
+		},
+		'mainController': {
+			deps: ['app']
+		},
+		'tipController': {
+			deps: ['app']
+		},
+		'tipDetailController': {
+			deps: ['app', 'clipboard']
+		}
+	},
+	deps:['app']
+});
+
+require(['indexController'], function () {
+	angular.bootstrap(document, ['MainApp']);
+});

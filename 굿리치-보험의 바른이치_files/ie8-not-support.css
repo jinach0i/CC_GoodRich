@@ -1,0 +1,11 @@
+/* 익스 7,8 접속안내문 */
+.ex_fix_wrap{position:relative; background:#f5f5f5; width:100%}
+.ex_fix_wrap.hide{display:none;}
+.ex_fix{position:relative; width:1100px; margin:0 auto; padding:10px}
+.ex_fix img{vertical-align:top;}
+.ex_fix .ex_info{display:inline-block; width:800px; font-size:18px; line-height:25px; *display:inline; zoom:1; color:#555; vertical-align:middle; margin:10px 0 0 20px}
+.ex_fix .ex_info em{color:#0199f8}
+.ex_fix .ex_info strong{text-decoration:underline; color:#ff542b}
+.ex_fix .close{position:absolute; right:10px; top:30px}
+.ex_fix .bw_update{position:absolute; right:100px; top:15px; display:inline-block; *display:inline; zoom:1}
+.ex_fix .bw_update a{border:1px solid #333; color:#333; display:block; padding:12px 30px; font-size:17px; font-weight:400;}

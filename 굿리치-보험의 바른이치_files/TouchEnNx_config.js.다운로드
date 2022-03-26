@@ -1,0 +1,272 @@
+/**
+ ***************************************************************************
+ * TouchEn Nx, 1.0.0
+ *
+ * For more information on this product, please see
+ * http://www.raonsecure.com
+ *
+ * Copyright (c) Raonsecure Co.,Ltd  All Rights Reserved.
+ *
+ * 본 코드에 대한 모든 권한은 (주)라온시큐어 있으며 동의없이 사용/배포/가공할 수 없습니다.
+ *
+ ***************************************************************************
+ */
+
+/**
+****************************************************
+TouchEnNx_config.js
+****************************************************
+| Version     작성자        수정일        변경사항 
+ ---------  -------  -----------  ----------    
+| v1.0.0.2    허혜림    2017.01.23      
+| v1.0.0.1    백서린    2017.01.20      최초
+
+****************************************************
+ Copyright ⒞ RaonSecure Co., Ltd. 
+****************************************************
+**/
+
+//윈10 로컬웹서버가 시작프로그램에 등록되어 피씨부팅시 실행되는데 속도가 오래걸림
+
+var TouchEnNxConfig = {};
+
+TouchEnNxConfig.path = {
+		url : window.location.protocol + "//" + window.location.host,			
+		base : "/resources/TouchEn",
+		cmn  : "/cmn"
+};
+
+/**	라이선스 */
+TouchEnNxConfig.lic = "eyJ2ZXJzaW9uIjoiMS4wIiwiaXNzdWVfZGF0ZSI6IjIwMTgwMzE5MDkxMDU0IiwicHJvdG9jb2xfbmFtZSI6InRvdWNoZW5leCIsInV1aWQiOiI3MzgzYTljYTkwY2I0OTI3OTAzMmJmYjMyMjllYWIwOCIsImxpY2Vuc2UiOiJnZXZCdjBKb3VPMWFkTTUyWDhtSVVNeVlyRWFhQ0tFS3FRNUtpNzZPUnV1cnVMM0N6Mm55aTI3dkxYZERWdjBtWkxFWjhoN1dCVTlWS29MSFQyeGxjQXNUXC9uaWRXakJSRlNuYzRIVTJXVTRXUzRrOWhnRlVvUjJzXC9ST0hodStOYWFBZytQZkNOV1BFMkQ4MTA0V29PMkYrMSsxRmVoRU9yTHl3WThUWGYzaGFvbE9HZ242ak1aaTB3WVlkeVRvaGpHMEJ0bUZFRitESWpHRjJXYmtQbTFrZ25mdWlOMlE2S2srVEdHV1laQm1FK05FM2EwQU5STGkyK1dHVklpdEYzRFkySXhDNE1PK1ErdWp3ODQxdW90WTRpN0F2MkF6aFViNUdGblZmdGV4dkJmN2FIUUdxcVwvWWxQOERVRkwzSHFseFJ0OVJJbkJEU3ZqMHY5SHptVDBaMVJzS2dmOTF1NEJhS3QwZjlyZXhQWElZUUZvN1NKcStpQ2U0TUdkaW02TXhBRjlzeXQrVWhSazUyN2dxNldqYVwva1VaOUJ5UzdlOGdaeHN3ZFVUanVESkV0OHlOODVpVktkWlI4c0l0eVwvOGdwc0sxTWpMQ21qOWMzV25MazlnME05Z2ZrdDIwV3hhY0JDYnprSzIwPSJ9";
+
+/** exproto debug */
+TouchEnNxConfig.isDebug = false;
+
+/** 모듈 자동 실행 여부*/
+TouchEnNxConfig.onload = true;
+
+TouchEnNxConfig.use	=	{
+		nxkey	:	false,
+		nxcr	:	true,
+		nxweb	:	false,
+		nxfw	:	false
+};
+
+/** 브라우저 및 OS 정보 */
+var TouchEn_BaseBRW = {
+    ua: navigator.userAgent.toLowerCase(),
+    ie: navigator.appName == 'Microsoft Internet Explorer',
+    ie_: navigator.userAgent.match('MSIE') == 'MSIE',
+    ns: navigator.appName == 'Netscape',
+    ff: navigator.userAgent.match('Firefox') == 'Firefox',
+    sf: navigator.userAgent.match('Safari') == 'Safari',
+    op: navigator.userAgent.match('Opera') == 'Opera',
+    cr: navigator.userAgent.match('Chrome') == 'Chrome',
+    win: navigator.platform.match('Win') == 'Win',
+    mac: navigator.userAgent.match('Mac') == 'Mac',
+    linux: navigator.userAgent.match('Linux') == 'Linux',
+    ie11: navigator.userAgent.match('Trident/7.0') == 'Trident/7.0'
+};
+
+/** mac 지원하지 않는 모륟은 여기에 추가 */
+if(TouchEn_BaseBRW.mac)
+{
+	TouchEnNxConfig.use.nxweb = false;
+	TouchEnNxConfig.use.nxfw = false;
+}
+
+TouchEnNxConfig.path.base = TouchEnNxConfig.path.url + TouchEnNxConfig.path.base;
+TouchEnNxConfig.path.cmn = TouchEnNxConfig.path.base + TouchEnNxConfig.path.cmn;
+
+
+/** 클라이언트 설치시 이동할 페이지 */
+TouchEnNxConfig.installPage = {
+		//tos		: TouchEnNxConfig.path.base + "/install/install.html"+"?"+"&url=" + encodeURIComponent(window.location.href), //제품 통합적용시 통합 설치 url 설정
+		tos		: TouchEnNxConfig.path.base + "/install/install_nxcr.html"+"?"+"&url=" + encodeURIComponent(window.location.href), // nxcr 단독적용시 nxcr 설치 url 설정
+		nxkey	: TouchEnNxConfig.path.base + "/install/install_nxkey.html"+"?"+"&url=" + encodeURIComponent(window.location.href),
+		nxcr	: TouchEnNxConfig.path.base + "/install/install_nxcr.html"+"?"+"&url=" + encodeURIComponent(window.location.href),
+		nxweb	: TouchEnNxConfig.path.base + "/install/install_nxweb.html"+"?"+"&url=" + encodeURIComponent(window.location.href),
+		nxfw	: TouchEnNxConfig.path.base + "/install/install_nxfw.html"+"?"+"&url=" + encodeURIComponent(window.location.href)
+};
+
+TouchEnNxConfig.tkMainpage = {
+		//tos		: "/demo/test.html", //제품 통합적용시 통합 메인페이지 url설정
+		tos		: "/demo/index.html", //nxcr 단독제품 배포시 tos를 nxcr url로 설정
+		nxkey	: "",
+		nxcr	: "/demo/index.html",
+		nxweb	: "",
+		nxfw	: ""
+};
+
+/** 프로그래스바 사용 유무 */
+/** 엣지브라우저에서 1sec 정도의 설치체크 시간이 필요 함으로 필수 사용을 권장한다.*/
+TouchEnNxConfig.processingbar = {
+		use	: true,
+		path : TouchEnNxConfig.path.base + "/processing.gif"
+};
+
+/** demon 사용 브라우저 설정*/
+//현재 키보드보안 42버전에서부터 EDGE , CHROME , FIREFOX, OPERA 지원가능
+
+//TouchEnNxConfig.daemon.SupportBrowser = ["EDGE", "CHROME", "FIREFOX", "OPERA"];
+
+TouchEnNxConfig.daemon = {
+		SupportBrowser	: ["EDGE", "CHROME", "FIREFOX", "OPERA"],
+		info			: {
+			isUse			: true,
+			portChecker		: TouchEnNxConfig.path.base + "/cmn/TouchEnNx_port_checker.js",
+			localhost		: "wss://127.0.0.1",
+			edgeStartPort	: 34581,
+			portChkCnt		: 3
+		}
+};
+
+/**
+ * CHROME, FIREFOX, OPERA 브라우저에 대해 아래와 같이 동작한다.
+ * mainextension : case1 : 데몬미설치,익스텐션 설치시 익스텐션으로 동작 
+ *                 case2 : 데몬설치 ,익스텐션 미설치시 데몬으로 동작
+ *                 case3 : 둘다 미설치일경우 데몬설치
+ * onlydaemon    : 데몬으로 동작 및 설치
+ * 공백 일 경우  : 익스텐션 동작 및 설치 
+ */
+//TouchEnNxConfig.runtype	= "onlydaemon";
+//TouchEnNxConfig.runtype	= "mainextension";
+TouchEnNxConfig.runtype	= "onlydaemon";
+TouchEnNxConfig.warningMacSierra = false;
+
+TouchEnNxConfig.version = {
+	/** 최소 지원브라우저 버전정보 설정*/
+	moduleMinVer	:	{
+		MSIE			:	"6",
+		chromeMinVer	:	"38",
+		FireFoxMinVer	:	"36",
+		OperaMinVer	 	:	"27",
+		SafariMinVer	:	"5",
+		SafariMinVerMac :   "6",
+		Edge			:	"ALL"
+	},
+	/** 키보드보안 설정 */
+	nxkey	: {
+		tkappiver			:	"1.0.0.43",
+		tkappmver			:	"1.0.0.36",
+		exWinVer			:	"1.0.0.42",
+		exWin64Ver			:	"1.0.0.42",
+		exWinProtocolVer	:	"1.0.1.964",
+		daemonVer			:	"1.0.2.2",
+		daemon64DownURL		:	"1.0.2.2",
+		exMacVer			:	"1.0.0.1",
+		exMacProtocolVer	:	"1.0.1.956"
+	},
+	/** 인증서복사 설정 */
+	nxcr	: {
+		exWinVer			:	"2.1.0.10",
+		exWin64Ver			:	"2.1.0.10",
+		exWinProtocolVer	:	"1.0.1.981",
+		daemonVer			:	"1.0.2,4",
+		exMacVer			:	"1.0.0.3",
+		exMacProtocolVer	:	"1.0.1.1025"
+	},
+	/** 방화벽 설정 */
+	nxfw	: {
+		exWinVer			:	"1.0.0.13",
+		exWin64Ver			:	"1.0.0.13",
+		exWinProtocolVer	:	"1.0.1.845",
+		daemonVer			:	"1.0.1.845",
+		daemon64DownURL		:	"1.0.1.845",
+		exMacVer			:	"1.0.0.1",
+		exMacProtocolVer	:	"1.0.0.956"
+	},
+	/** 웹컨텐츠보안 설정 */
+	nxweb	: {
+		exWinVer			:	"1.0.0.1",
+		exWin64Ver			:	"1.0.0.1",
+		exWinProtocolVer	:	"1.0.1.952",
+		daemonVer			:	"1.0.1.845",
+		daemon64DownURL		:	"1.0.1.845"
+	},
+	extension :{
+		exChromeExtVer		:	"1.0.1.12",
+		exFirefoxExtVer		:	"1.0.1.12",
+		exOperaExtVer		:	"1.0.1.12"
+	}
+};
+
+TouchEnNxConfig.module	=	{
+	nxkey	:	{
+		exWinClient		            :	TouchEnNxConfig.path.base + "/nxKey/module/TouchEn_nxKey_Installer_32bit.exe",
+		exWin64Client            	:	TouchEnNxConfig.path.base + "/nxKey/module/TouchEn_nxKey_Installer_64bit.exe",
+		daemonDownURL	            :	TouchEnNxConfig.path.base + "/nxKey/module/TouchEn_nxKey_Installer_32bit_MLWS.exe",
+		daemon64DownURL             :   TouchEnNxConfig.path.base + "/nxKey/module/TouchEn_nxKey_Installer_64bit_MLWS.exe",
+		exMacClient					:	TouchEnNxConfig.path.base + "/nxKey/module/TouchEn nxKey.pkg",
+		exMacProtocolDownURL		: 	TouchEnNxConfig.path.base + "/nxKey/module/TouchEn nxKey.pkg"
+	},
+	/** 인증서복사 설정 */
+	nxcr	:	{
+		exWinClient				:	TouchEnNxConfig.path.base + "/nxCR/module/KSCertRelay_nx_Installer_32bit.exe",
+		exWin64Client			:	TouchEnNxConfig.path.base + "/nxCR/module/KSCertRelay_nx_Installer_64bit.exe",
+		daemonDownURL			:	TouchEnNxConfig.path.base + "/nxCR/module/KSCertRelay_nx_Installer_32bit.exe",
+		//daemon64DownURL 		:	TouchEnNxConfig.path.base + "/nxCR/module/KSCertRelay_nx_Installer_64bit.exe",
+		exMacClient 			: 	TouchEnNxConfig.path.base + "/nxCR/module/KSCertRelay_nx_Installer.pkg",
+		exMacProtocolDownURL	: 	TouchEnNxConfig.path.base + "/nxCR/module/KSCertRelay_nx_Installer.pkg"
+	},
+	/** 방화벽 설정 */
+	nxfw	:	{
+		exWinClient					:	TouchEnNxConfig.path.base + "/nxFw/module/TEFW_Installer.exe",
+		exWin64Client				:	TouchEnNxConfig.path.base + "/nxFw/module/TEFW_Installer64.exe",
+		daemonDownURL				:	TouchEnNxConfig.path.base + "/nxFw/module/TEFW_Installer.exe",
+		exMacClient					:	TouchEnNxConfig.path.base + "/nxFw/module/TEFW_Installer.pkg",
+		exMacProtocolDownURL		: 	TouchEnNxConfig.path.base + "/nxFw/module/TEFW_Installer.pkg"
+		
+	},
+	/** 웹컨텐츠보안 설정 */
+	nxweb	:	{
+		exWinClient		:	TouchEnNxConfig.path.base + "/nxWeb/module/TouchEn_nxWeb_Installer.exe",
+		exWin64Client	:	TouchEnNxConfig.path.base + "/nxWeb/module/TouchEn_nxWeb_Installer.exe",
+		daemonDownURL	:	TouchEnNxConfig.path.base + "/nxWeb/module/TouchEn_nxWeb_Installer.exe"
+	},
+	extension	:{
+		exChromeExtDownURL	: "https://chrome.google.com/webstore/detail/dncepekefegjiljlfbihljgogephdhph",
+		exFirefoxExtDownURL	: TouchEnNxConfig.path.base + "/extension/touchenex_firefox.xpi",
+		exOperaExtDownURL	: TouchEnNxConfig.path.base + "/extension/touchenex_opera.nex"
+	}
+};
+
+/** 키보드보안 E2E 를 사용하지 않을 경우 주석해제*/
+var TNK_SR = "";
+
+/**	클라이언트 솔루션별 동작 설정*/
+TouchEnNxConfig.solution={
+		nxkey : {
+				tekOption : {
+					"pki": "TouchEnkeyEx",
+				    "keyboardonly": "false",
+				    "defaultenc": "false",
+				    "verify": "0",
+				    "defaultpaste": "true",
+				    "iframename": "",
+				    "usegetenc": "false",
+				    "clearbufferonempty": "true",
+				    "refreshsession": "true",
+				    "improve": "true",
+					"bstart": 0,
+				    "setcallback": "false",
+				    "usebspress": "false",
+				    "ignoreprogress": "true",
+				    "exformname": "",
+				    "idbase": "false",
+				    "allcrypt": "false",
+					"browserinfo" : "",
+				    "cert": "-----BEGIN CERTIFICATE-----MIID0TCCArmgAwIBAgIJAOvT64h8zh31MA0GCSqGSIb3DQEBBQUAMH8xCzAJBgNVBAYTAmtvMQ4wDAYDVQQIDAVzZW91bDEOMAwGA1UEBwwFc2VvdWwxDTALBgNVBAoMBHJhb24xDTALBgNVBAsMBHJhb24xCzAJBgNVBAMMAnJhMSUwIwYJKoZIhvcNAQkBFhZuamthbmdAbHVtZW5zb2Z0LmNvLmtyMB4XDTEzMDEyMjE2MzI1MloXDTEzMDIyMTE2MzI1MlowfzELMAkGA1UEBhMCa28xDjAMBgNVBAgMBXNlb3VsMQ4wDAYDVQQHDAVzZW91bDENMAsGA1UECgwEcmFvbjENMAsGA1UECwwEcmFvbjELMAkGA1UEAwwCcmExJTAjBgkqhkiG9w0BCQEWFm5qa2FuZ0BsdW1lbnNvZnQuY28ua3IwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCd9KKpIVcBkomsLs+yABiY02wRiBHnh3XEGJTD5hfJr1mxXOP4wdQFZtKMelOjY60vBRucmDjHqDLKMk4LAfhDsiIa37RJfdf4ffr2+JNWZPKJbMTJ5b2ssR1vjVzfBeDmNEVK32VOspL8VXM5sQK/NDkrilRDpBNZQFyXzZDMXlyRGeqf1ffxKx0egiKM18P8qjMRmQ9evqTxFzbUfr73KV6En6cfptSOtfq8vTcfwFdRWXJ4Bo184X/JseU6rbQ+B2Co/2aU2Rl2IM3TWIgXs/FXH4muT5vAbDD76a/UxeuiMLm+nisEVnljWXzBv+blIEr2C5EyRrcLZSQuRt/nAgMBAAGjUDBOMB0GA1UdDgQWBBSGctXaTyQ+ZTGVA+IKVMf4oztybzAfBgNVHSMEGDAWgBSGctXaTyQ+ZTGVA+IKVMf4oztybzAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUAA4IBAQBOKEH54SHsKxyhIsTgOcvYqUpvGPbvYDDzJAEwyuU08SL9plOYE7Q/43JkaqKvced63aoDvFywnlWFSnQ3Vkmf3IJHk5RPgIYgh0rIaXe6hvlw1MKyYcSlakHayBk9HHNs/vfNxNQkSe20nFXXD6lNqyIJz9x0vLhIukh35W4Cs/sxoHcmhrzpxty75nEi4cH33uNGBb7DUgLcL3vvxDlFTLHExDUQQzY0bRYhtdiuXkSpd9xxsDAP0GW5Ah4JMThSmmsHLdJ8NcSCE8O0xZCT/j6j4IV7mS1arj46IEpVDgSTMGcqp3DpZ63JCpXjViTpFjEKYXpZf6HyfMvZ4nsj-----END CERTIFICATE-----",
+					"srdk": TNK_SR,
+					"generate_event": "false",
+					"driverexcept": "0",
+					"delayedck": "false",
+					"shiftbypass": "true",
+					"allowdup": "false",
+					"enc2": "false",
+				    "searchformname":"",
+					"runtype": TouchEnNxConfig.runtype,
+					"tk_isRunningSecurity" : "false"
+				}
+		}
+};
