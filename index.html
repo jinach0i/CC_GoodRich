@@ -6,16 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoodRich</title>
     <link rel="stylesheet" href="./public/css/style.css">
+    <link rel="stylesheet" href="./public/css/swiper-bundle.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="./public/js/script.js" defer></script>
 </head>
 <body>
     <div id="skip">
         <ul>
-            <li><a href="#">메뉴로 이동</a></li>
-            <li><a href="#">본문1로 이동</a></li>
-            <li><a href="#">본문2로 이동</a></li>
-            <li><a href="#">본문2로 이동</a></li>
-            <li><a href="#">본문2로 이동</a></li>
-            <li><a href="#">본문2로 이동</a></li>
+            <li><a href="#header">메뉴로 이동</a></li>
+            <li><a href="#downloads">본문1로 이동</a></li>
+            <li><a href="#drawer">본문2로 이동</a></li>
+            <li><a href="#family">본문3로 이동</a></li>
+            <li><a href="#qna">본문4로 이동</a></li>
+            <li><a href="#claim">본문5로 이동</a></li>
+            <li><a href="#analysis">본문6로 이동</a></li>
+            <li><a href="#suggestions">본문7로 이동</a></li>
+            <li><a href="#consultation">본문8로 이동</a></li>
+            <li><a href="#privacy">본문9로 이동</a></li>
         </ul>
     </div>
     <div id="wrap">
@@ -24,40 +33,238 @@
                 <h1><a href="./index.html" title="메인으로 이동합니다"><img src="./public/img/logo.png" alt="로고"></a></h1>
                 <nav>
                     <ul>
-                        <li><a href="#">앱 다운로드</a></li>
-                        <li><a href="#">서비스소개</a></li>
+                        <li><a href="./index.html">앱 다운로드</a></li>
+                        <li><a href="#drawer">서비스소개</a></li>
+                        <li><a href="https://goodrichapp.com/tip/list/1">굿리치 보험 TIP</a></li>
+                        <li><a href="https://goodrichapp.com/certificate">공동인증서 복사</a></li>
                     </ul>
                 </nav>
+                <a href="http://richnco.co.kr/"><img src="./public/img/img_richnco.png" alt="Rich&Co로 이동"></a>
             </div>
         </header>
-        <main>
-            <section id="downloads">
-                <div class="left"><img src="./public/img/img_phone_down_menu.jpg" alt="메인이미지"></div>
-                <div class="right">
-                    <h2>보험 관리를 쉽고 편하게!</h2>
-                    <p>보험의 바른일치</p>
-                    <span>굿리치</span>
-                    <p>앱 다운로드 링크를 보내 드립니다</p>
-                    <div class="input_download">
-                        <input type="text" id="phoneNum">
-                        <label for="phoneNum">동의하고 앱 다운로드</label>
-                        <p>* 휴대폰 번호는 (-) 없이 숫자만 입력해 주세요!</p>
+        <main class="swiper mySwiper">
+            <div class="swiper-pagination"></div>
+            <div class="swiper-wrapper">
+                <section id="downloads" class="swiper-slide">
+                    
+                    <div class="inner">
+                        <div class="left">
+                            <div class="mobile_main_wrapper">
+                                <img src="./public/img/img_phone_down.jpg" alt="메인 화면" class="mobile_main_bg">
+                                <img src="./public/img/img_phone_down_menu.jpg" alt="메인 본문" class="mobile_main_contents">
+                            </div>
+                        </div>
+                        <div class="right">
+                            <h2>보험 관리를 쉽고 편하게!</h2>
+                            <p class="ment2">보험의 바른 이치</p>
+                            <span>굿리치</span>
+                            <p class="link_ment">앱 다운로드 링크를 보내 드립니다</p>
+                            <div class="input_download">
+                                <input type="text" id="phoneNum" placeholder="010 - 0000 - 0000">
+                                <button>동의하고 앱 다운로드</button>
+                            </div>
+                            <div class="market_links">
+                                <p>* 휴대폰 번호는 (-) 없이 숫자만 입력해 주세요!</p>
+                                <button class="googleplay"><span></span> Google Play</button>
+                                <button class="appstopre"><span></span> App Store</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="market_links">
-                        <button>Google Play</button>
-                        <button>App Store</button>
+                    <a href="#drawer" class="to_the_services"></a>
+                </section>
+                <section id="drawer" class="swiper-slide">
+                    <div class="inner">
+                        <div class="left">
+                            <div class="txtbox">
+                                <p class="ment1">필요한 정보만 바로바로!</p>
+                                <h2 class="ment2"><span class="colortxt">보험 서랍 </span>기능을</h2>
+                                <p class="ment3">이용해 보세요</p>
+                                <p class="ment4">내 보험 상황에 맞게 핵심 기능이 최적화되어 있어요.</p>
+                                <button class="more">더보기</button>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <img src="./public/img/img_phone_drawer.jpg" alt="모바일첫화면" class="mobile_entrance">
+                            <div class="mobile_main_wrapper">
+                                <div class="mobile_main_txt">
+                                    <p><span>내 보험 </span>조회부터</p>
+                                    <p>시작해 볼까요?</p>
+                                </div>
+                                <img src="./public/img/img_phone_drawer_content_220208.png" alt="모바일본문" class="mobile_main"></div>
+                            <img src="./public/img/img_phone_drawer_bottom.gif" alt="모바일메뉴" class="mobile_nav">
+                        </div>
                     </div>
-                </div>
-            </section>
-            <section id="drawer"></section>
-            <section id="drawer"></section>
-            <section id="drawer"></section>
-            <section id="drawer"></section>
-            <section id="drawer"></section>
-            <section id="drawer"></section>
-            <section id="drawer"></section>
-
+                </section>
+                <section id="family" class="swiper-slide">
+                    <div class="inner">
+                        <div class="left">
+                            <div class="txtbox">
+                                <p class="ment1">가족이 가입한 보험까지 한눈에!</p>
+                                <h2 class="ment2"><span class="colortxt">가족 보험 조회</span></h2>
+                                <p class="ment3">내가 가입한 보험 내용을 상세하게 확인할 수 있고,</p>
+                                <p class="ment4">간단한 동의만 있으면 온 가족 보험까지 함께 볼 수 있어요.</p>
+                                <button class="more">더보기</button>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <img src="./public/img/img_phone_family.jpg" alt="내보험 화면">
+                        
+                        </div>
+                    </div>
+                </section>
+                <section id="qna" class="swiper-slide">
+                    <div class="inner">
+                        <div class="left">
+                                <div class="txtbox">
+                                    <p class="ment1">무엇이든 물어보세요!</p>
+                                    <h2 class="ment2"><span class="colortxt">질문 답변</span></h2>
+                                    <p class="ment3">알쏭달쏭 알면서도 모를 것 같은 보험 궁금증</p>
+                                    <p class="ment4">전문가의 친절하고 상세한 답변으로 해결할 수 있어요.</p>
+                                    <button class="more">더보기</button>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <img src="./public/img/img_phone_qna.jpg" alt="질문답변 화면">
+                        
+                        </div>
+                    </div>
+                </section>
+                <section id="claim" class="swiper-slide">
+                        <div class="inner">
+                            <div class="left">
+                                <div class="txtbox">
+                                    <p class="ment1">찍고 보내면 청구 끝!</p>
+                                    <h2 class="ment2"><span class="colortxt">보험금 청구하기</span></h2>
+                                    <p class="ment3">서류 등록부터 신청 완료까지 3분이면 충분해요.</p>
+                                    <p class="ment4">추가 진료를 받았다면 간편한 반복 청구 기능을 이용하세요.</p>
+                                    <button class="more">더보기</button>
+                                </div>
+                                                </div>
+                                                <div class="right">
+                            <img src="./public/img/img_phone_claim.jpg" alt="청구 화면">
+                                                </div>
+                        </div>
+                </section>
+                <section id="analysis" class="swiper-slide">
+                        <div class="inner">
+                            <div class="left">
+                                <div class="txtbox">
+                                    <p class="ment1">보험 등급부터 진단까지 한 번에!</p>
+                                    <h2 class="ment2"><span class="colortxt">보험 분석 서비스</span></h2>
+                                    <p class="ment3">보험 등급을 통해 내 보험 상태를 한눈에 볼 수 있으며,</p>
+                                    <p class="ment4">상세 분석 리포트는 물론 전문가의 맞춤 상담도 받아볼 수 있어요.</p>
+                                    <p class="ment5">※ 보험등급 : 굿리치에서 자체 평가한 결과 점수/등급</p>
+                                    <button class="more">더보기</button>
+                            </div>
+                                                </div>
+                                                <div class="right">
+                            <img src="./public/img/img_phone_analysis.jpg" alt="분석 화면">
+                            
+                                                </div>
+                        </div>
+                </section>
+                <section id="suggestions" class="swiper-slide">
+                        <div class="inner">
+                            <div class="left">
+                                <div class="txtbox">
+                                    <p class="ment1">지금 부족한 보장이 있다면!</p>
+                                    <h2 class="ment2"><span class="colortxt">맞춤 상품 추천</span></h2>
+                                    <p class="ment3">보험 진단 결과에 따른 맞춤 보험 상품을 확인하세요.</p>
+                                    <p class="ment4">전문가의 데이터 분석을 통해 꼭 필요한 최적의 보험을 추천드려요.</p>
+                                    <button class="more">더보기</button>
+                                </div>
+                                                </div>
+                                                <div class="right">
+                            <img src="./public/img/img_phone_market.jpg" alt="상품 화면">
+                                                </div>
+                        </div>
+                </section>
+                <section id="consultation" class="swiper-slide">
+                        <div class="inner">
+                            <div class="left">
+                                <div class="txtbox">
+                                    <p class="ment1">전문가와 만남이 필요하다면!</p>
+                                    <h2 class="ment2"><span class="colortxt">굿리치라운지</span></h2>
+                                    <p class="ment3">전문가를 직접 만나 일대일 맞춤 보험 상담을 받을 수 있어요.</p>
+                                    <p class="ment4">어떤 보험 고민이라도 원스톱 무료 상담 서비스를 제공해 드려요.</p>
+                                    <button class="more">더보기</button>
+                                </div>
+                                                </div>
+                                                <div class="right">
+                            <img src="./public/img/img_phone_lounge_220208.jpg" alt="상담예약 화면">
+                                                </div>
+                        </div>
+                </section>
+                <section id="privacy" class="swiper-slide" >
+                    <div class="contents">
+                        <div class="left">
+                                <h2 class="title">개인 정보 보호를 위해</h2>
+                                <p class="title">최선을 다하고 있습니다.</p>
+                                <ol>
+                                    <li>인증 정보는 제3자 열람이 불가합니다.
+                                        <ul>
+                                            <li>서비스 이용 시 입력된 고객님의 인증정보는 고객님의</li>
+                                            <li>스마트폰에만 저장&관리되어 타인에게 노출되지 않도록 합니다.</li>
+                                        </ul>
+                                    </li>
+                                    <li>강력하고 안전한 암호화 알고리즘을 사용합니다.
+                                        <ul>
+                                            <li>입력하신 고객님의 개인정보는 개인정보의 유출 및 변조 방지를 위해</li>
+                                            <li>강력하고 안전한 암호화 알고리즘으로 암호화되고 있습니다.</li>
+                                        </ul>
+                                    </li>
+                                    <li>정보보호 관련 법규를 준수합니다.
+                                        <ul>
+                                            <li>정보통신망법, 개인정보보호법, 신용정보보호법 등을 준수하여</li>
+                                            <li>개인정보를 안전하게 관리하고 있습니다.</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                        </div>
+                        <div class="right">
+                            <img src="./public/img/img_olchiPrivacy.png" alt="privacy bg" class="privacy_bg">
+                            <img src="./public/img/txt_privacy.png" alt="보안사고0건" class="reported_security_issues">
+                        </div>
+                    </div>
+                    <div class="relatedlaw">
+                        <p>1. (주)리치앤코(Rich&co.) (등록번호 제 2006038313호)</p>
+                        <p>2. 본 광고는 광고심의기준을 준수하였으며, 유효기간은 심의일로부터 1년입니다. *생명보험협회 심의필 제 2021-08916호(2021-12-14 ~ 2022-12-13)</p>
+                    </div>
+                    <!-- <footer id="footer">
+                        <div class="footer_top">
+                            <div class="policies">
+                                <ul>
+                                    <li><a href="https://goodrichapp.com/resources/html/agreement/agreement2_v3.html">개인정보처리방침</a></li>
+                                    <li><a href="https://goodrichapp.com/resources/html/agreement/agreement1_v3.html">이용약관</a></li>
+                                    <li><a href="https://richnco.kr/jsp/html/certificatepop.html">생·손보협회 대리점등록증</a></li>
+                                    <li><a href="https://richnco.kr/jsp/html/consumerProtectionStandards.html">금융소비자보호기준</a></li>
+                                    <li><a href="https://richnco.kr/jsp/html/consumerProtectionInternalControlStandards.html">금융소비자보호 내부통제기준</a></li>
+                                </ul>
+                            </div>
+                            <div class="sns">
+                                <a href="https://www.instagram.com/goodrich.official/" title="인스타로 이동"><img src="./public/img/ico_instagram.png" alt="인스타그램"></a>
+                                <a href="https://www.youtube.com/channel/UCOywTwTenIqiE3MqlOJQ9Fg" title="유튜브로 이동"><img src="./public/img/ico_youtube.png" alt="유튜브"></a>
+                            </div>
+                        </div>
+                        <div class="footer_bottom">
+                            <address>
+                                <ul>
+                                    <li><strong>주소</strong><p>서울특별시 중구 세종대로 9길 41 퍼시픽타워 7층 ( 구. 올리브타워 )</p></li>
+                                    <li><strong>대표이사</strong><p>공태식</p></li>
+                                    <li><strong>보험대리점</strong><p>등록번호 제2006038313호</p></li>
+                                    <li><strong>사업자등록번호</strong><p>120-86-93433</p></li>
+                                    <li><strong>개인정보관리 담당자</strong><p>준법감시인 임원희</p></li>
+                                    <li><strong>서비스 이용문의</strong><a href="helpdesk@richnco.co.kr"> helpdesk@richnco.co.kr</a></li>
+                                </ul>
+                            </address>
+                            <p>Copyright © Rich&Co. All rights reserved.</p>
+                        </div>
+                    </footer> -->
+                </section>
+            </div>
         </main>
+        <a href="#drawer" class="to_the_services"><img src="./public/img/btn_top.png" alt="서비스로 이동" class="to_the_direction"></a>
+        <a href="#downloads" class="to_downloads"><img src="./public/img/btn_appdownload.png" alt="다운로드로 이동"></a>
     </div>
 </body>
 </html>
